@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Gatherly",
-  description: "A lightweight developer meetup app",
+  description: "Plan community gatherings, groups, and local events",
 };
 
 export default function RootLayout({

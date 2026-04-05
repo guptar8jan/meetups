@@ -11,25 +11,22 @@ function titleCase(value: string) {
 
 function generateGroupNameVariants(prompt: string) {
   const normalized = prompt.toLowerCase();
-  if (normalized.includes("coffee") && normalized.includes("frontend")) {
+  if (normalized.includes("coffee") || normalized.includes("cafe")) {
     return [
-      "Latte & Components",
-      "Espresso & Elements",
-      "Beans & Breakpoints",
-      "Caffeine & Components",
+      "Corner Cup & Chat",
+      "Porchlight Coffee Circle",
+      "Welcome Mug Club",
+      "Morning Meet & Greet",
     ];
   }
-  if (normalized.includes("backend")) {
-    return ["Packet & Pints", "Ports & Pours", "Queues & Cocktails"];
+  if (normalized.includes("potluck")) {
+    return ["Table Together Circle", "Shared Dish Society", "Community Table Friends"];
   }
-  if (normalized.includes("ai") && normalized.includes("demo")) {
-    return ["Model Mischief Club", "Demo Drift Lab", "Neural Showcase Society"];
+  if (normalized.includes("park") || normalized.includes("picnic") || normalized.includes("outdoor")) {
+    return ["Green Space Gatherings", "Sunshine Social Club", "Park Bench Friends"];
   }
-  if (normalized.includes("ai")) {
-    return ["Neural Nights", "Weights & Wonder", "Prompt People Club"];
-  }
-  if (normalized.includes("design")) {
-    return ["Pixels & People", "Frames & Friends", "Design After Dark"];
+  if (normalized.includes("volunteer") || normalized.includes("cleanup")) {
+    return ["Hands & Hearts Circle", "Neighbor Help Day Club", "Block Care Collective"];
   }
   const base = `${titleCase(prompt.split(" ").slice(0, 3).join(" "))} Society`;
   return [base, `${base} Collective`, `${base} Guild`];

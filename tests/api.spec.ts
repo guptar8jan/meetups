@@ -3,9 +3,9 @@ import { test, expect } from '@playwright/test';
 test('POST /api/groups creates a group with a generated name', async ({ request }) => {
   const response = await request.post('/api/groups', {
     data: {
-      prompt: 'something for frontend engineers who like coffee',
-      city: 'Austin',
-      flavor: 'coffee chat curator',
+      prompt: 'neighbors who enjoy meeting for coffee on weekends',
+      city: 'Riverside',
+      flavor: 'community planner',
     },
   });
 
@@ -13,28 +13,28 @@ test('POST /api/groups creates a group with a generated name', async ({ request 
   const json = await response.json();
   expect(json.ok).toBe(true);
   const validNames = [
-    'Latte & Components',
-    'Espresso & Elements',
-    'Beans & Breakpoints',
-    'Caffeine & Components',
+    'Corner Cup & Chat',
+    'Porchlight Coffee Circle',
+    'Welcome Mug Club',
+    'Morning Meet & Greet',
   ];
   expect(
-    validNames.includes(json.name) || /^Latte & Components \d+$/.test(json.name)
+    validNames.includes(json.name) || /^Corner Cup & Chat \d+$/.test(json.name)
   ).toBe(true);
 });
 
 test('POST /api/events creates an event', async ({ request }) => {
   const response = await request.post('/api/events', {
     data: {
-      prompt: 'a relaxed demo night for AI builders',
-      dateLabel: 'Apr 20 · 7:00 PM',
-      location: 'East Austin',
-      flavor: 'demo night organizer',
+      prompt: 'spring potluck on the block with shared dishes',
+      dateLabel: 'Apr 20 · 6:00 PM',
+      location: 'Oak Street green',
+      flavor: 'social host',
     },
   });
 
   expect(response.status()).toBe(201);
   const json = await response.json();
   expect(json.ok).toBe(true);
-  expect(json.title).toBe('Demo Jam');
+  expect(json.title).toBe('Community Potluck Night');
 });

@@ -1,19 +1,30 @@
 import { test, expect } from '@playwright/test';
 
-test('agents page loads', async ({ page }) => {
+test('agents page loads with role choice', async ({ page }) => {
   await page.goto('/agents');
-  await expect(page.getByText('Pick a canned agent and get event ideas.')).toBeVisible();
+  await expect(page.getByText('Assistants for organizers and attendees.')).toBeVisible();
+  await expect(page.getByTestId('role-organizer')).toBeVisible();
+  await expect(page.getByTestId('role-attendee')).toBeVisible();
 });
 
-test('coffee chat curator suggests coffee frontend event', async ({ page }) => {
+test('conversation curator suggests coffee gathering', async ({ page }) => {
   await page.goto('/agents');
-  await page.getByPlaceholder('something for frontend engineers who like coffee').fill('something for frontend engineers who like coffee');
-  await expect(page.getByText('Coffee & Components')).toBeVisible();
+  await expect(page.getByTestId('role-organizer')).toBeVisible();
+  await page.getByPlaceholder('a welcoming social event for people who enjoy coffee and conversation').fill('a welcoming morning gathering with coffee on the porch');
+  await expect(page.getByRole('heading', { name: 'Coffee & Conversation', exact: true })).toBeVisible();
 });
 
-test('demo night organizer suggests AI demo event', async ({ page }) => {
+test('showcase organizer suggests showcase night', async ({ page }) => {
   await page.goto('/agents');
-  await page.getByRole('button', { name: 'Demo Night Organizer' }).click();
-  await page.getByPlaceholder('something for frontend engineers who like coffee').fill('something for AI builders showing demos');
-  await expect(page.getByText('Demo Jam: AI Builders Edition')).toBeVisible();
+  await page.getByTestId('organizer-assistant-showcase-organizer').click();
+  await page.getByPlaceholder('a welcoming social event for people who enjoy coffee and conversation').fill('an evening for neighbors to share creative ideas');
+  await expect(page.getByRole('heading', { name: 'Showcase Night', exact: true })).toBeVisible();
+});
+
+test('attendee role shows discovery assistants and sample matches', async ({ page }) => {
+  await page.goto('/agents');
+  await page.getByTestId('role-attendee').click();
+  await expect(page.getByTestId('discovery-intro')).toContainText('Discovery assistants');
+  await expect(page.getByText('Neighborhood Scout')).toBeVisible();
+  await expect(page.getByTestId('discovery-event-1')).toContainText('Saturday porch coffee');
 });

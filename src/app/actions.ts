@@ -13,19 +13,21 @@ function titleCase(value: string) {
 
 function generateGroupName(prompt: string, flavor: string) {
   const normalized = prompt.toLowerCase();
-  if (normalized.includes("coffee") && normalized.includes("frontend")) return "Latte & Components";
-  if (normalized.includes("backend")) return "Packet & Pints";
-  if (normalized.includes("ai")) return "Model Mischief Club";
-  if (normalized.includes("design")) return "Pixels & People";
+  if (normalized.includes("coffee") || normalized.includes("cafe")) return "Corner Cup & Chat";
+  if (normalized.includes("potluck")) return "Table Together Circle";
+  if (normalized.includes("park") || normalized.includes("picnic")) return "Green Space Gatherings";
+  if (normalized.includes("volunteer") || normalized.includes("cleanup")) return "Hands & Hearts Circle";
   return `${titleCase(prompt.split(" ").slice(0, 3).join(" "))} Society`;
 }
 
 function generateEventName(prompt: string, flavor: string) {
   const normalized = prompt.toLowerCase();
-  if (normalized.includes("coffee") && normalized.includes("frontend")) return "Coffee & Components Night";
-  if (normalized.includes("hackathon")) return "Build Sprint Night";
-  if (normalized.includes("demo")) return "Demo Jam";
-  if (normalized.includes("happy hour")) return "Builders After Hours";
+  if (normalized.includes("potluck")) return "Community Potluck Night";
+  if (normalized.includes("story") || normalized.includes("circle")) return "Story Circle Evening";
+  if (normalized.includes("fair") || normalized.includes("market")) return "Neighborhood Fair Afternoon";
+  if (normalized.includes("picnic") || normalized.includes("park")) return "Park Picnic Social";
+  if (normalized.includes("coffee")) return "Coffee & Conversation Gathering";
+  if (normalized.includes("happy hour") || normalized.includes("mixer")) return "Evening Mixer";
   return `${titleCase(flavor)} Session`;
 }
 

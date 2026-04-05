@@ -20,15 +20,19 @@ export default function Home() {
             <div>
               <p className={`text-sm uppercase tracking-[0.3em] ${theme.accent}`}>Gatherly</p>
               <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-6xl">
-                Real meetup website, not fake vibes.
+                A place to discover, host, and grow communities.
               </h1>
             </div>
-            <div className="flex gap-3"><Link href="/community" className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-100">Community</Link><Link href="/attendee" className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-100">Attendee</Link><Link href="/agents" className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-100">AI agents</Link><Link href="/organizer" className={`rounded-full px-4 py-2 text-sm font-semibold ${theme.button}`}>
-              Organizer workspace
-            </Link></div>
+            <div className="flex gap-3">
+              <Link href="/chat" className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-100">Chat</Link>
+              <Link href="/community" className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-100">Community</Link>
+              <Link href="/attendee" className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-100">Attendee</Link>
+              <Link href="/agents" className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-100">Assistants</Link>
+              <Link href="/organizer" className={`rounded-full px-4 py-2 text-sm font-semibold text-slate-100`}>Organizer</Link>
+            </div>
           </div>
           <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
-            Browse groups, see upcoming events, and use the organizer workspace to create real persistent groups and events from prompts.
+            Create groups, host events, gather feedback, and help people find experiences they actually want to attend.
           </p>
         </div>
 
@@ -55,19 +59,19 @@ export default function Home() {
 
         <section className={`rounded-2xl border p-6 ${theme.card}`}>
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">Groups</h2>
+            <h2 className="text-2xl font-semibold">Groups & communities</h2>
             <span className="text-sm text-slate-400">{groups.length} live groups</span>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {groups.map((group) => (
               <article key={group.id} className="rounded-xl border border-white/10 bg-white/5 p-4">
                 <p className="text-sm text-cyan-300">{group.city}</p>
-                <h3 className="mt-1 text-xl font-semibold">{group.name}</h3>
+                <Link href={`/groups/${group.id}`} className="mt-1 block text-xl font-semibold hover:text-cyan-300">{group.name}</Link>
                 <p className="mt-2 text-sm text-slate-300">{group.description}</p>
                 <div className="mt-4 text-sm text-slate-400">
                   <p>{group.members} members</p>
                   <p>{group.nextEvent ?? "No event yet"}</p>
-                  {group.agentFlavor ? <p className="mt-1 capitalize">Agent flavor: {group.agentFlavor}</p> : null}
+                  {group.agentFlavor ? <p className="mt-1 capitalize">Planning style: {group.agentFlavor}</p> : null}
                 </div>
               </article>
             ))}

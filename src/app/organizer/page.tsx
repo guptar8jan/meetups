@@ -1,16 +1,17 @@
 "use client";
 
+import type { FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const flavors = [
+const styles = [
   "social host",
-  "tech meetup planner",
-  "coffee chat curator",
-  "demo night organizer",
-  "after-work happy hour planner",
-  "hackathon host",
+  "learning guide",
+  "community planner",
+  "showcase organizer",
+  "after-hours host",
+  "workshop curator",
 ];
 
 const theme = {
@@ -22,21 +23,22 @@ const theme = {
 
 export default function OrganizerPage() {
   const router = useRouter();
-  const [groupPrompt, setGroupPrompt] = useState("something for frontend engineers who like coffee");
+  const [groupPrompt, setGroupPrompt] = useState("a welcoming social group for people who enjoy coffee and conversation");
   const [groupCity, setGroupCity] = useState("Austin");
-  const [groupFlavor, setGroupFlavor] = useState("coffee chat curator");
-  const [eventPrompt, setEventPrompt] = useState("a relaxed demo night for AI builders");
+  const [groupStyle, setGroupStyle] = useState("community planner");
+  const [eventPrompt, setEventPrompt] = useState("a relaxed evening event for creative people to meet and share ideas");
   const [eventDate, setEventDate] = useState("Apr 20 · 7:00 PM");
   const [eventLocation, setEventLocation] = useState("East Austin");
-  const [eventFlavor, setEventFlavor] = useState("demo night organizer");
+  const [eventStyle, setEventStyle] = useState("social host");
   const [status, setStatus] = useState<string>("");
 
-  async function createGroup() {
+  async function createGroup(e?: FormEvent) {
+    e?.preventDefault();
     setStatus("Creating group...");
-    const res = await fetch('/api/groups', {
+    const res = await fetch("/api/groups", {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ prompt: groupPrompt, city: groupCity, flavor: groupFlavor }),
+      body: JSON.stringify({ prompt: groupPrompt, city: groupCity, flavor: groupStyle }),
     });
     const data = await res.json();
     if (!res.ok || !data.ok) {
@@ -47,12 +49,13 @@ export default function OrganizerPage() {
     router.refresh();
   }
 
-  async function createEvent() {
+  async function createEvent(e?: FormEvent) {
+    e?.preventDefault();
     setStatus("Creating event...");
     const res = await fetch('/api/events', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ prompt: eventPrompt, dateLabel: eventDate, location: eventLocation, flavor: eventFlavor }),
+      body: JSON.stringify({ prompt: eventPrompt, dateLabel: eventDate, location: eventLocation, flavor: eventStyle }),
     });
     const data = await res.json();
     if (!res.ok || !data.ok) {
@@ -71,7 +74,7 @@ export default function OrganizerPage() {
             <div>
               <p className={`text-sm uppercase tracking-[0.3em] ${theme.accent}`}>Organizer</p>
               <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-6xl">
-                Create real groups and events from prompts.
+                Create groups and events from simple prompts.
               </h1>
             </div>
             <Link href="/" className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-100">
@@ -79,7 +82,7 @@ export default function OrganizerPage() {
             </Link>
           </div>
           <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
-            REST APIs only now. No server actions.
+            Use planning styles and prompts to launch communities and experiences people can join.
           </p>
           {status ? <p className="mt-4 text-sm text-cyan-300">{status}</p> : null}
         </div>
@@ -87,31 +90,31 @@ export default function OrganizerPage() {
         <div className="grid gap-6 lg:grid-cols-2">
           <section data-testid="create-group-form" className={`rounded-2xl border p-6 ${theme.card}`}>
             <h2 className="text-2xl font-semibold">Create a group</h2>
-            <div className="mt-4 space-y-3">
-              <select value={groupFlavor} onChange={(e) => setGroupFlavor(e.target.value)} className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-slate-100">
-                {flavors.map((flavor) => <option key={flavor} value={flavor}>{flavor}</option>)}
+            <form className="mt-4 space-y-3" onSubmit={(e) => void createGroup(e)}>
+              <select value={groupStyle} onChange={(e) => setGroupStyle(e.target.value)} className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-slate-100">
+                {styles.map((style) => <option key={style} value={style}>{style}</option>)}
               </select>
-              <input value={groupPrompt} onChange={(e) => setGroupPrompt(e.target.value)} placeholder="something for frontend engineers who like coffee" className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-slate-100" />
+              <input value={groupPrompt} onChange={(e) => setGroupPrompt(e.target.value)} placeholder="a welcoming social group for people who enjoy coffee and conversation" className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-slate-100" />
               <input value={groupCity} onChange={(e) => setGroupCity(e.target.value)} placeholder="Austin" className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-slate-100" />
-              <button type="button" onClick={createGroup} className={`rounded-full px-4 py-2 text-sm font-semibold ${theme.button}`}>
+              <button type="submit" className={`rounded-full px-4 py-2 text-sm font-semibold text-slate-100`}>
                 Create group
               </button>
-            </div>
+            </form>
           </section>
 
           <section data-testid="create-event-form" className={`rounded-2xl border p-6 ${theme.card}`}>
             <h2 className="text-2xl font-semibold">Create an event</h2>
-            <div className="mt-4 space-y-3">
-              <select value={eventFlavor} onChange={(e) => setEventFlavor(e.target.value)} className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-slate-100">
-                {flavors.map((flavor) => <option key={flavor} value={flavor}>{flavor}</option>)}
+            <form className="mt-4 space-y-3" onSubmit={(e) => void createEvent(e)}>
+              <select value={eventStyle} onChange={(e) => setEventStyle(e.target.value)} className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-slate-100">
+                {styles.map((style) => <option key={style} value={style}>{style}</option>)}
               </select>
-              <input value={eventPrompt} onChange={(e) => setEventPrompt(e.target.value)} placeholder="a relaxed demo night for AI builders" className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-slate-100" />
+              <input value={eventPrompt} onChange={(e) => setEventPrompt(e.target.value)} placeholder="a relaxed evening event for creative people to meet and share ideas" className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-slate-100" />
               <input value={eventDate} onChange={(e) => setEventDate(e.target.value)} placeholder="Apr 20 · 7:00 PM" className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-slate-100" />
               <input value={eventLocation} onChange={(e) => setEventLocation(e.target.value)} placeholder="East Austin" className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-slate-100" />
-              <button type="button" onClick={createEvent} className={`rounded-full px-4 py-2 text-sm font-semibold ${theme.button}`}>
+              <button type="submit" className={`rounded-full px-4 py-2 text-sm font-semibold text-slate-100`}>
                 Create event
               </button>
-            </div>
+            </form>
           </section>
         </div>
       </section>
