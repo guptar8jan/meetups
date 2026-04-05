@@ -6,14 +6,23 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:api": "playwright test tests/api.spec.ts",
+    "test:ui": "playwright test tests/ui.spec.ts",
+    "test:agents": "playwright test tests/agents.spec.ts",
+    "test:attendee": "playwright test tests/attendee.spec.ts",
+    "test:community": "playwright test tests/community.spec.ts"
   },
   "dependencies": {
+    "better-sqlite3": "^12.8.0",
     "next": "16.2.2",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
