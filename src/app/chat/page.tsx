@@ -3,6 +3,7 @@
 import type { FormEvent } from "react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { chatTheme as c, gatherlyTheme as g } from "@/styles/theme";
 
 type ChatMessage = {
   id: number;
@@ -19,14 +20,6 @@ const CHANNELS: { id: string; label: string; description: string }[] = [
 ];
 
 const DISPLAY_KEY = "gatherly-chat-display-name";
-
-const shell = {
-  sidebar: "bg-[#1e1f22] border-r border-black/50",
-  main: "bg-[#313338]",
-  header: "border-b border-black/40 shadow-sm",
-  composer: "border-t border-black/40 bg-[#2b2d31]",
-  pill: "text-[11px] font-semibold uppercase tracking-wide text-slate-400",
-};
 
 function avatarHue(name: string) {
   let h = 0;
@@ -78,8 +71,8 @@ export default function ChatPage() {
   }, [loadMessages]);
 
   useEffect(() => {
-    const t = setInterval(() => void loadMessages(), 4000);
-    return () => clearInterval(t);
+    const pollId = window.setInterval(() => void loadMessages(), 4000);
+    return () => window.clearInterval(pollId);
   }, [loadMessages]);
 
   useEffect(() => {
@@ -122,7 +115,7 @@ export default function ChatPage() {
 
   return (
     <div className="flex min-h-screen text-slate-100">
-      <aside className={`flex w-full max-w-[260px] shrink-0 flex-col ${shell.sidebar}`}>
+      <aside className={`flex w-full max-w-[260px] shrink-0 flex-col ${c.sidebar}`}>
         <div className="border-b border-black/40 p-4">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Gatherly</p>
           <h1 className="mt-1 text-lg font-bold text-white">Chat</h1>
@@ -136,7 +129,7 @@ export default function ChatPage() {
               data-testid={`chat-channel-${ch.id}`}
               onClick={() => setChannel(ch.id)}
               className={`flex w-full flex-col items-start rounded-md px-2 py-2 text-left transition ${
-                channel === ch.id ? "bg-[#404249] text-white" : "text-slate-300 hover:bg-white/5"
+                channel === ch.id ? c.channelActive : c.channelIdle
               }`}
             >
               <span className="font-medium">
@@ -147,21 +140,18 @@ export default function ChatPage() {
           ))}
         </nav>
         <div className="border-t border-black/40 p-3">
-          <p className={shell.pill}>Display name</p>
+          <p className={c.pill}>Display name</p>
           <input
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             onBlur={() => saveDisplayName(displayName)}
-            className="mt-2 w-full rounded border border-white/10 bg-[#2b2d31] px-2 py-1.5 text-sm text-white outline-none focus:border-cyan-500/50"
+            className={c.inputSidebar}
             placeholder="How you appear in chat"
             maxLength={40}
           />
         </div>
         <div className="border-t border-black/40 p-3">
-          <Link
-            href="/"
-            className="inline-flex rounded-full border border-white/15 px-4 py-2 text-sm text-slate-100 hover:bg-white/5"
-          >
+          <Link href="/" className={g.backLinkInline}>
             Back to Gatherly
           </Link>
           <Link href="/community" className="mt-2 block text-xs text-slate-500 hover:text-slate-300">
@@ -170,8 +160,8 @@ export default function ChatPage() {
         </div>
       </aside>
 
-      <div className={`flex min-w-0 flex-1 flex-col ${shell.main}`}>
-        <header className={`flex items-center justify-between gap-3 px-4 py-3 ${shell.header}`}>
+      <div className={`flex min-w-0 flex-1 flex-col ${c.main}`}>
+        <header className={`flex items-center justify-between gap-3 px-4 py-3 ${c.header}`}>
           <div className="flex min-w-0 items-center gap-3">
             <span className="shrink-0 text-slate-500">#</span>
             <div className="min-w-0">
@@ -179,10 +169,7 @@ export default function ChatPage() {
               <p className="text-xs text-slate-400">{activeMeta?.description}</p>
             </div>
           </div>
-          <Link
-            href="/"
-            className="shrink-0 rounded-full border border-white/15 px-4 py-2 text-sm text-slate-100 hover:bg-white/5"
-          >
+          <Link href="/" className={g.backLink}>
             Back to Gatherly
           </Link>
         </header>
@@ -215,11 +202,7 @@ export default function ChatPage() {
                   <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
                     <span className="font-semibold text-white">{m.author}</span>
                     <time className="text-[11px] text-slate-500">{formatTime(m.createdAt)}</time>
-                    {isIdea ? (
-                      <span className="rounded bg-cyan-500/20 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-cyan-200">
-                        event idea
-                      </span>
-                    ) : null}
+                    {isIdea ? <span className={c.eventIdeaBadge}>event idea</span> : null}
                   </div>
                   <p className="mt-1 whitespace-pre-wrap break-words text-[15px] leading-relaxed text-slate-200">
                     {m.body}
@@ -231,7 +214,7 @@ export default function ChatPage() {
           <div ref={bottomRef} />
         </div>
 
-        <form onSubmit={sendMessage} className={`p-4 ${shell.composer}`}>
+        <form onSubmit={sendMessage} className={`p-4 ${c.composer}`}>
           <p className="mb-2 text-[11px] text-slate-500">
             Tip: start with <kbd className="rounded bg-black/30 px-1">[event]</kbd> or{" "}
             <kbd className="rounded bg-black/30 px-1">/suggest</kbd> to highlight an event pitch.
@@ -244,12 +227,12 @@ export default function ChatPage() {
               rows={2}
               maxLength={2000}
               data-testid="chat-composer"
-              className="min-h-[44px] flex-1 resize-y rounded-lg border border-black/40 bg-[#383a40] px-3 py-2 text-sm text-white placeholder:text-slate-500 outline-none focus:border-cyan-500/40"
+              className={c.composerTextarea}
             />
             <button
               type="submit"
               disabled={sending || !draft.trim()}
-              className="self-end rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow disabled:opacity-40"
+              className={c.sendButton}
             >
               {sending ? "…" : "Send"}
             </button>
